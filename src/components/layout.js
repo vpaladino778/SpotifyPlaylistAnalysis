@@ -16,7 +16,7 @@ export default class Layout extends React.Component {
                     <Header as='h1'>
                         Using Grid
                     </Header>
-                    <SearchBar/>
+                    
                 </Container>
             </div>
         )
