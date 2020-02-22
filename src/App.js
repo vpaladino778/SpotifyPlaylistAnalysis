@@ -18,46 +18,25 @@ class App extends Component {
     super();
     this.state = {
       token: null,
-      item: {
-        album: {
-          images: [{ url: "" }]
-        },
-        name: "",
-        artists: [{ name: "" }],
-        duration_ms: 0
-      },
-      is_playing: "Paused",
-      progress_ms: 0
     };
-    this.getCurrentlyPlaying = this.getCurrentlyPlaying.bind(this);
-  }
-
-  getCurrentlyPlaying(token) {
-    // Make a call using the token
-    $.ajax({
-      url: "https://api.spotify.com/v1/me/player",
-      type: "GET",
-      beforeSend: xhr => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
-      },
-      success: data => {
-        this.setState({
-          item: data.item,
-          is_playing: data.is_playing,
-          progress_ms: data.progress_ms
-        });
-      }
-    });
   }
 
   componentDidMount() {
     // Set token
     let _token = hash.access_token;
-    if (_token) {
+    if (localStorage.getItem('token')) {
+      this.setState({
+        token: localStorage.getItem('token')
+      });
+    } else {
+
       // Set token
       this.setState({
         token: _token
       });
+
+      // Save Token into session ID
+      localStorage.setItem('token', _token);
     }
   }
 
@@ -66,7 +45,7 @@ class App extends Component {
       <div className="App" style={styles.root}>
         <Header as="h1">Spotify Playlist Analyzer</Header>
         <header className="App-header">
-          {!this.state.token && (
+          {!localStorage.getItem('token') && (
             <Button
               className="ui button"
               href={`${authUrl}`}
@@ -74,8 +53,8 @@ class App extends Component {
               Login to Spotify
             </Button>
           )}
-          {this.state.token && (
-            <SearchBar token={this.state.token}/>
+          {localStorage.getItem('token') && (
+            <SearchBar token={localStorage.getItem('token')}/>
           )}
         </header>
       </div>
