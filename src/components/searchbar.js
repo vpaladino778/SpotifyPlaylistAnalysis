@@ -1,6 +1,7 @@
 import React from "react";
 import { Input } from "semantic-ui-react";
 import * as $ from "jquery";
+import GenreList from "./genreList";
 
 /**
  * SearchBar Component that processes spotify playlist ID
@@ -63,6 +64,9 @@ export default class SearchBar extends React.Component {
             icon: "search"
           }}
         />
+        {this.tracks &&
+          <GenreList list={this.tracks}/>
+        }
       </React.Fragment>
     );
   }
