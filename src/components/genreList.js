@@ -10,17 +10,23 @@ import * as $ from "jquery";
 export default class GenreList extends React.Component {
   constructor(props) {
     super(props);
-
   }
+  
+
+
 
   render() {
-    const listItems = this.props.list((song)=>
-      <li>{song}</li>
-    );
     return (
-      <ul>
-        {listItems}
-      </ul>
+      <React.Fragment>
+        <h2>Genre List!</h2>
+        <ul>
+          {
+            this.props.list.map((song) =>(
+              <li>{song.track.name}</li>
+            ))
+          }
+        </ul>        
+      </React.Fragment>
     );
   }
 }

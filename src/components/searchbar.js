@@ -48,6 +48,7 @@ export default class SearchBar extends React.Component {
 
   handleSearch(event) {
     // TODO: Error checking playlist link
+    // TODO: Parse an actual playlist link instead of just the playlist ID
 
     this.getPlaylistTracks(this.props.token, this.state.searchValue);
   }
@@ -64,8 +65,8 @@ export default class SearchBar extends React.Component {
             icon: "search"
           }}
         />
-        {this.tracks &&
-          <GenreList list={this.tracks}/>
+        {this.state.tracks &&
+          <GenreList list={this.state.tracks}/>
         }
       </React.Fragment>
     );
