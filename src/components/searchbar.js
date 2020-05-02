@@ -46,11 +46,34 @@ export default class SearchBar extends React.Component {
     this.setState({searchValue: event.target.value});
   }
 
+  /**
+   * Takes in the search bar string after a search is performed and 
+   * extracts out the appropriate playlist ID to be used in the API call
+   * @param {string} searchParameter Parameter that was inputted into the searchbar
+   */
+  parseSearchLink(searchParameter) {
+    //https://open.spotify.com/playlist/4Gpu2BiBp8QjHyX0IbvVLx?si=4T8ONlmDS_eMLJGGKISLXg
+    var id = searchParameter;
+    var spotifyPlaylistString = "https://open.spotify.com/playlist/";
+    var idPos = searchParameter.indexOf(spotifyPlaylistString, 0);
+    var endPos = searchParameter.indexOf("?si=");
+    if(idPos != -1 && endPos != -1) {
+      id = searchParameter.substring(idPos + spotifyPlaylistString.length, endPos);
+      return id;
+    }
+    return "";
+  }
+
   handleSearch(event) {
     // TODO: Error checking playlist link
     // TODO: Parse an actual playlist link instead of just the playlist ID
+    let playListID = this.parseSearchLink(this.state.searchValue)
 
-    this.getPlaylistTracks(this.props.token, this.state.searchValue);
+    if (playListID === "") {
+      //TODO: Error indication (Red box outline?)
+    } else {
+      this.getPlaylistTracks(this.props.token, playListID);
+    }
   }
   render() {
     return (
