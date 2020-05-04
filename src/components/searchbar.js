@@ -75,6 +75,7 @@ export default class SearchBar extends React.Component {
       this.getPlaylistTracks(this.props.token, playListID);
     }
   }
+  
   render() {
     return (
       <React.Fragment>

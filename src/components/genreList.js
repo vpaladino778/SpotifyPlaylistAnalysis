@@ -10,6 +10,50 @@ import * as $ from "jquery";
 export default class GenreList extends React.Component {
   constructor(props) {
     super(props);
+    this.getTrackTags("glass animals", "gooey")
+  }
+
+  getTrackTags(artist, track) {
+    // // http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist=glass+animals&track=dreamland&api_key=YOUR_API_KEY&format=json
+    // let formattedArtist = artist.replace(/\s+/g, "+");
+    // let formattedTrack = track.replace(/\s+/g, "+");
+    // let builtUrl = "http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist=" + formattedArtist + "&track=" + formattedTrack + "&api_key=" + "95dae2f461126e63bb08621640a91d06" + "&format=json";
+    
+    // fetch(builtUrl)
+    //   .then((res) => res.json())
+    //   .then(
+    //     (data) => {
+    //       this.setState({
+    //         tags: data.toptags.tag[0].name
+    //       });
+    //       alert(data.toptags.tag[0].name);
+    //     },
+    //     (error) => {
+    //       this.setState({
+    //         error,
+    //       });
+    //     }
+    //   );
+    // http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist=glass+animals&track=dreamland&api_key=YOUR_API_KEY&format=json
+    let formattedArtist = artist.replace(/\s+/g, "+");
+    let formattedTrack = track.replace(/\s+/g, "+");
+    let builtUrl = "http://localhost:9000/routes/lastfmAPI?artist=" + formattedArtist + "?track=" + formattedTrack;
+
+    fetch(builtUrl)
+      .then((res) => res.json())
+      .then(
+        (data) => {
+          this.setState({
+            tags: data.toptags.tag[0].name
+          });
+          alert(data.toptags.tag[0].name);
+        },
+        (error) => {
+          this.setState({
+            error,
+          });
+        }
+      );
   }
 
   render() {
