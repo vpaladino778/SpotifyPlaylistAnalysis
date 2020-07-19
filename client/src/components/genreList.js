@@ -1,52 +1,84 @@
 import React from "react";
 import { Input } from "semantic-ui-react";
 import * as $ from "jquery";
+import GenreListItem from "./genreListItem.js";
 
 /**
- * This component will become our genre list. It takes in the 
+ * This component will become our genre list. It takes in the
  * playlist tracks from Spotify and will analyze that playlist
  * and display a list of genres.
  */
 export default class GenreList extends React.Component {
   constructor(props) {
     super(props);
-    this.getTrackTags("glass animals", "gooey")
+    this.state = {
+      tagsList: {
+        'Example Genre': {
+          tagCount: 1,
+        }
+      } 
+    };
+    //alert(this.getTrackTags("glass animals", "gooey"));
   }
 
-  getTrackTags(artist, track) {
-    // // http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist=glass+animals&track=dreamland&api_key=YOUR_API_KEY&format=json
-    // let formattedArtist = artist.replace(/\s+/g, "+");
-    // let formattedTrack = track.replace(/\s+/g, "+");
-    // let builtUrl = "http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist=" + formattedArtist + "&track=" + formattedTrack + "&api_key=" + "95dae2f461126e63bb08621640a91d06" + "&format=json";
-    
-    // fetch(builtUrl)
-    //   .then((res) => res.json())
-    //   .then(
-    //     (data) => {
-    //       this.setState({
-    //         tags: data.toptags.tag[0].name
-    //       });
-    //       alert(data.toptags.tag[0].name);
-    //     },
-    //     (error) => {
-    //       this.setState({
-    //         error,
-    //       });
-    //     }
-    //   );
-    // http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist=glass+animals&track=dreamland&api_key=YOUR_API_KEY&format=json
+  static getDerivedStateFromProps(nextProps, prevState) {
+    GenreList.updateTagList(nextProps);
+  }
+  static updateTagList(songList) {
+    var track;
+    for(track in songList) {
+      this.getTrackTags(track.artist, track.name);
+    }
+  }
+
+  /**
+   * Makes a call to the backend to retrieve the list of songs tags
+   * 
+   * @param {String} artist Artist name to search for
+   * @param {String} track Track to search for 
+   */
+  static getTrackTags(artist, track) {
     let formattedArtist = artist.replace(/\s+/g, "+");
     let formattedTrack = track.replace(/\s+/g, "+");
-    let builtUrl = "http://localhost:9000/routes/lastfmAPI?artist=" + formattedArtist + "?track=" + formattedTrack;
-
+    let builtUrl = "http://localhost:9000/lastfmAPI?artist=" + formattedArtist + "&track=" + formattedTrack;
+    
     fetch(builtUrl)
       .then((res) => res.json())
       .then(
         (data) => {
-          this.setState({
-            tags: data.toptags.tag[0].name
-          });
-          alert(data.toptags.tag[0].name);
+          let tagName = data.toptags[0].name;
+          let tagList = [...this.state.tagsList];
+          let newItem = [...tagList[data.toptags[0].name]];
+          let count = 0;
+          if(this.state.tagsList[tagName].tagCount) {
+            count = this.state.tagsList[tagName].tagCount + 1;
+          }
+          newItem.tagCount = count;
+          tagList[tagName] = newItem;
+
+          this.setState({tagList});
+
+          // let count;
+          // if(tags[data.toptags[0].name] === undefined){
+          //   count = 0;
+          // }else {
+          //   count = this.state.tags[data.toptags[0].name];
+          // }
+
+          
+
+
+          // this.setState(previousState => ({
+          //   tagsList: {
+          //     tagName: data.toptags[0].name,
+          //     tagCount: previousState.tagsList[data.toptags[0].name].tagCount + 1,
+          //   }
+          // }));
+
+
+          // this.setState({
+          //   tags: data.toptags.tag[0].name
+          // });
         },
         (error) => {
           this.setState({
@@ -56,17 +88,14 @@ export default class GenreList extends React.Component {
       );
   }
 
+
   render() {
     return (
       <React.Fragment>
         <h2>Genre List!</h2>
-        <ul>
-          {
-            this.props.list.map((song) =>(
-              <li>{song.track.name}</li>
-            ))
-          }
-        </ul>        
+          {Object.keys(this.state.tagsList).map((track, index) => (
+            <GenreListItem genre={track} numSongs={track.tagCount}/>
+          ))}
       </React.Fragment>
     );
   }

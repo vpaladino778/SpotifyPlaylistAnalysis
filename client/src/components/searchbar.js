@@ -37,7 +37,6 @@ export default class SearchBar extends React.Component {
         this.setState({
           tracks: data.items
         });
-        alert(data.items[0].track.name);
       }
     });
   }
@@ -57,7 +56,7 @@ export default class SearchBar extends React.Component {
     var spotifyPlaylistString = "https://open.spotify.com/playlist/";
     var idPos = searchParameter.indexOf(spotifyPlaylistString, 0);
     var endPos = searchParameter.indexOf("?si=");
-    if(idPos != -1 && endPos != -1) {
+    if(idPos !== -1 && endPos !== -1) {
       id = searchParameter.substring(idPos + spotifyPlaylistString.length, endPos);
       return id;
     }
@@ -90,7 +89,7 @@ export default class SearchBar extends React.Component {
           }}
         />
         {this.state.tracks &&
-          <GenreList list={this.state.tracks}/>
+          <GenreList songList={this.state.tracks}/>
         }
       </React.Fragment>
     );

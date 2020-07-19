@@ -26,10 +26,15 @@ router.get("/", async function(req, res, next) {
     const artistString = `artist=${req.query.artist}`;
     const songString = `track=${req.query.track}`;
 
+    const formattedArtist = artistString.replace(/\s+/g, "+");
+    const formattedSong = songString.replace(/\s+/g, "+");
+
     // It uses node-fetch to call the last fm api, and reads the key from .env
-    console.log(artistString);
+    console.log(formattedArtist);
+    console.log(songString);
+
     const response = await fetch(
-      `http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&${artistString}&${songString}&api_key=${process.env.LAST_FM_API_KEY}&format=json`,
+      `http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&${formattedArtist}&${formattedSong}&api_key=${process.env.LAST_FM_API_KEY}&format=json`,
       );  
     // Get json response
     const json = await response.text();
