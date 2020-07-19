@@ -37,6 +37,8 @@ export default class SearchBar extends React.Component {
         this.setState({
           tracks: data.items
         });
+        // Call the callback function in App.js, and pass the songList
+        this.props.songListCallbackFunction(data.items);
       }
     });
   }
@@ -88,9 +90,6 @@ export default class SearchBar extends React.Component {
             icon: "search"
           }}
         />
-        {this.state.tracks &&
-          <GenreList songList={this.state.tracks}/>
-        }
       </React.Fragment>
     );
   }
